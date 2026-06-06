@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashCola - Jukwaa la Vinywaji</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <!-- Login Page -->
+    <div id="loginPage" class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="logo-animation">
+                    <i class="fas fa-glass-whiskey fa-3x logo-icon"></i>
+                </div>
+                <h2>CashCola</h2>
+                <p>Jukwaa la Vinywaji na Mapato</p>
+            </div>
+            
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="showLoginForm()">Ingia</button>
+                <button class="auth-tab" onclick="showSignupForm()">Jisajili</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form" onsubmit="handleLogin(event)">
+                <div class="form-group floating">
+                    <input type="text" id="loginIdentifier" required>
+                    <label>Jina la mtumiaji au Barua pepe</label>
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="form-group floating">
+                    <input type="password" id="loginPassword" required>
+                    <label>Nenosiri</label>
+                    <i class="fas fa-lock toggle-password" onclick="togglePassword('loginPassword')"></i>
+                </div>
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox"> Nikumbuke
+                    </label>
+                    <a href="#" class="forgot-password">Umesahau nenosiri?</a>
+                </div>
+                <button type="submit" class="btn-auth">
+                    <span>Ingia</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+<!-- Signup Form -->
+<form id="signupForm" class="auth-form" style="display: none;" onsubmit="handleSignup(event)">
+    <div class="form-group floating">
+        <input type="text" id="signupUsername" required autocomplete="off">
+        <label>Jina la mtumiaji</label>
+        <i class="fas fa-user"></i>
+        <span class="validation-icon"></span>
+    </div>
+    <div class="form-group floating">
+        <input type="text" id="signupFullname" required>
+        <label>Jina kamili</label>
+        <i class="fas fa-id-card"></i>
+    </div>
+    <div class="form-group floating">
+        <input type="email" id="signupEmail" required>
+        <label>Barua pepe</label>
+        <i class="fas fa-envelope"></i>
+        <span class="validation-icon"></span>
+    </div>
+    <div class="form-group floating">
+        <input type="password" id="signupPassword" required minlength="6">
+        <label>Nenosiri</label>
+        <i class="fas fa-lock toggle-password" onclick="togglePassword('signupPassword')"></i>
+    </div>
+    <div class="form-group floating">
+        <input type="password" id="signupConfirmPassword" required minlength="6">
+        <label>Thibitisha nenosiri</label>
+        <i class="fas fa-lock toggle-password" onclick="togglePassword('signupConfirmPassword')"></i>
+        <span class="password-match-icon"></span>
+    </div>
+    <div class="form-group floating">
+        <input type="text" id="referralCode" placeholder=" ">
+        <label>Namba ya rufaa (hiari)</label>
+        <i class="fas fa-users"></i>
+        <span class="referral-status"></span>
+    </div>
+    <div class="referral-info" id="referralInfo">
+        <i class="fas fa-gift"></i>
+        <span>Pata bonasi ya 10% kwenye amana ya kwanza ukitumia namba ya rufaa!</span>
+    </div>
+    <div class="password-strength" id="passwordStrength">
+        <div class="strength-bar"></div>
+        <span class="strength-text"></span>
+    </div>
+    <button type="submit" class="btn-auth" id="signupButton">
+        <span>Jisajili</span>
+        <i class="fas fa-user-plus"></i>
+    </button>
+</form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard -->
+    <div id="dashboard" class="dashboard-container" style="display: none;">
+        <!-- Top Navigation -->
+<!-- Top Navigation - User Dashboard -->
+<nav class="top-nav">
+    <div class="nav-brand">
+        <!-- Hamburger Menu Button (Visible on mobile/tablet only) -->
+        <button class="hamburger-menu" id="userHamburger" onclick="toggleUserSidebar()" aria-label="Menu">
+            <span></span>
+        </button>
+        <div class="brand-logo">
+            <i class="fas fa-glass-whiskey"></i>
+            <span>CashCola</span>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <div class="notification-bell" onclick="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="badge">3</span>
+        </div>
+        <div class="user-dropdown" onclick="toggleUserMenu()">
+            <img src="https://via.placeholder.com/40" alt="User" class="user-avatar">
+            <span id="currentUsername">Mtumiaji</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="dropdown-menu" id="userDropdown">
+            <a href="#" onclick="showSection('profile')"><i class="fas fa-user-circle"></i> Wasifu</a>
+            <a href="#" onclick="showSection('referral')"><i class="fas fa-users"></i> Rufaa</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Toka</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Sidebar Overlay (for mobile) -->
+<div class="sidebar-overlay" id="userSidebarOverlay" onclick="closeUserSidebar()"></div>
+<!-- Social Links Popup Modal -->
+<div id="socialLinksModal" class="modal social-links-modal">
+    <div class="modal-content social-links-content">
+        <div class="social-links-header">
+            <div class="social-links-icon">
+                <i class="fas fa-share-alt"></i>
+            </div>
+            <h3>Follow Us on Social Media</h3>
+            <p>Follow our social media accounts to stay updated with latest offers and news!</p>
+        </div>
+        
+        <div class="social-links-list" id="socialLinksList">
+            <!-- Social links populated here -->
+        </div>
+        
+        <div class="social-links-footer">
+            <button class="btn-social-skip" onclick="skipSocialLinks()">
+                <i class="fas fa-times"></i> Skip for Now
+            </button>
+            <button class="btn-social-done" onclick="confirmSocialLinks()">
+                <i class="fas fa-check"></i> Done Following
+            </button>
+        </div>
+        
+        <div class="social-links-timer">
+            <i class="fas fa-clock"></i>
+            <span>This popup will appear every 2 minutes until you follow all links</span>
+        </div>
+    </div>
+</div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-menu">
+                <a href="#" class="menu-item active" onclick="showSection('home')">
+                    <i class="fas fa-home"></i>
+                    <span>Nyumbani</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('marketplace')">
+                    <i class="fas fa-store"></i>
+                    <span>Soko la Vinywaji</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('myDrinks')">
+                    <i class="fas fa-glass-cheers"></i>
+                    <span>Vinywaji Vyangu</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('deposit')">
+                    <i class="fas fa-arrow-circle-down"></i>
+                    <span>Amana</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('withdraw')">
+                    <i class="fas fa-arrow-circle-up"></i>
+                    <span>Kutoa</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('referral')">
+                    <i class="fas fa-users"></i>
+                    <span>Rufaa na Bonasi</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('history')">
+                    <i class="fas fa-history"></i>
+                    <span>Historia</span>
+                </a>
+                <a href="#" class="menu-item" onclick="showSection('profile')">
+                    <i class="fas fa-user-cog"></i>
+                    <span>Wasifu</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Section -->
+            <section id="homeSection" class="content-section active">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card animate-slide-up">
+                        <div class="stat-icon balance-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Salio Lako</h3>
+                            <p id="userBalance">TZS 0.00</p>
+                            <span class="stat-change positive">+0%</span>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-slide-up">
+                        <div class="stat-icon earnings-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Mapato ya Leo</h3>
+                            <p id="dailyEarnings">TZS 0.00</p>
+                            <span class="stat-change positive">Active</span>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-slide-up">
+                        <div class="stat-icon drinks-icon">
+                            <i class="fas fa-glass-whiskey"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Vinywaji</h3>
+                            <p id="activeDrinks">0</p>
+                            <span class="stat-change">Active</span>
+                        </div>
+                    </div>
+                    <div class="stat-card animate-slide-up">
+                        <div class="stat-icon total-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Jumla ya Mapato</h3>
+                            <p id="totalEarnings">TZS 0.00</p>
+                            <span class="stat-change positive">+0%</span>
+                        </div>
+                    </div>
+                </div>
+
+               <!-- Slideshow Section -->
+<div class="slideshow-container">
+    <div class="slideshow-main">
+        <div class="slides-wrapper" id="slidesWrapper">
+            <!-- Slides will be dynamically added here -->
+        </div>
+        
+        <!-- Slide Navigation Arrows -->
+        <button class="slide-arrow slide-prev" onclick="changeSlide(-1)" aria-label="Slide iliyopita">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <button class="slide-arrow slide-next" onclick="changeSlide(1)" aria-label="Slide inayofuata">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+        
+        <!-- Slide Indicators/Dots -->
+        <div class="slide-dots" id="slideDots"></div>
+    </div>
+    
+    <!-- Current Slide Info (Title & Description) -->
+    <div class="slide-info-bar" id="slideInfoBar">
+        <h3 id="currentSlideTitle">Karibu CashCola</h3>
+        <p id="currentSlideDescription">Jukwaa bora la uwekezaji wa vinywaji na mapato ya kila siku</p>
+    </div>
+</div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="action-btn pulse" onclick="showSection('deposit')">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Amana</span>
+                    </button>
+                    <button class="action-btn pulse" onclick="showSection('withdraw')">
+                        <i class="fas fa-minus-circle"></i>
+                        <span>Kutoa</span>
+                    </button>
+                    <button class="action-btn pulse" onclick="showSection('marketplace')">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Nunua</span>
+                    </button>
+                </div>
+
+                <!-- Live Transactions -->
+                <div class="live-transactions">
+                    <h3>
+                        <i class="fas fa-bolt live-icon"></i>
+                        Miamala ya Moja kwa Moja
+                    </h3>
+                    <div class="transaction-feed" id="transactionFeed">
+                        <!-- Live transactions will appear here -->
+                    </div>
+                </div>
+            </section>
+
+<!-- Marketplace Section -->
+<section id="marketplaceSection" class="content-section">
+    <div class="marketplace-header">
+        <h2><i class="fas fa-store"></i> Soko la Vinywaji</h2>
+        <span class="marketplace-count" id="marketplaceCount">0</span>
+    </div>
+    
+<!-- Marketplace Drinks Grid -->
+<div class="drinks-grid-premium" id="drinksGrid">
+    <!-- Drinks will be populated here dynamically -->
+</div>
+
+<!-- Empty State -->
+<div class="drinks-empty-state" id="drinksEmptyState" style="display: none;">
+    <div class="empty-state-animation">
+        <div class="empty-icon-wrapper">
+            <i class="fas fa-glass-whiskey empty-icon"></i>
+            <div class="empty-particles">
+                <span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+        <h3>Hakuna Vinywaji</h3>
+        <p>Vinywaji vitapatikana hivi karibuni. Rudia baadaye!</p>
+    </div>
+</div>
+</section>
+
+            <!-- My Drinks Section -->
+            <section id="myDrinksSection" class="content-section">
+                <h2>Vinywaji Vyangu</h2>
+                <div class="drinks-grid" id="myDrinksGrid">
+                    <!-- Purchased drinks will be populated here -->
+                </div>
+            </section>
+            
+            <!-- Referral Section -->
+<section id="referralSection" class="content-section">
+    <div class="referral-dashboard">
+        <h2>Mfumo wa Rufaa na Bonasi</h2>
+        
+        <!-- Referral Stats -->
+        <div class="referral-stats-grid">
+            <div class="referral-stat-card">
+                <div class="referral-stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="referral-stat-info">
+                    <h3>Jumla ya Warejea</h3>
+                    <p id="totalReferrals">0</p>
+                </div>
+            </div>
+            <div class="referral-stat-card">
+                <div class="referral-stat-icon bonus-icon">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="referral-stat-info">
+                    <h3>Bonasi Zilizopatikana</h3>
+                    <p id="totalReferralBonus">TZS 0</p>
+                </div>
+            </div>
+            <div class="referral-stat-card">
+                <div class="referral-stat-icon daily-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="referral-stat-info">
+                    <h3>Bonasi ya Kuingia Leo</h3>
+                    <p id="dailyLoginBonus">TZS 0</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Daily Login Bonus -->
+        <div class="daily-bonus-card">
+            <div class="daily-bonus-header">
+                <h3><i class="fas fa-gift"></i> Bonasi ya Kuingia Kila Siku</h3>
+                <span class="bonus-amount">TZS 200</span>
+            </div>
+            <p class="daily-bonus-info">Pata TZS 200 kila siku unapoingia kwenye akaunti yako!</p>
+            <button id="claimDailyBonusBtn" class="btn-primary claim-bonus-btn" onclick="claimDailyBonus()">
+                <i class="fas fa-hand-holding-usd"></i>
+                <span>Chukua Bonasi ya Leo</span>
+            </button>
+            <p class="last-claim-info" id="lastClaimInfo"></p>
+        </div>
+        
+        <!-- Referral Link -->
+        <div class="referral-link-card">
+            <h3><i class="fas fa-link"></i> Kiungo Chako cha Rufaa</h3>
+            <p>Shiriki kiungo hiki na marafiki zako upate bonasi!</p>
+            <div class="referral-link-box">
+                <input type="text" id="referralLink" readonly>
+                <button onclick="copyReferralLink()" class="btn-copy">
+                    <i class="fas fa-copy"></i> Nakili
+                </button>
+            </div>
+            <div class="referral-code-box">
+                <p>Namba ya Rufaa: <strong id="myReferralCode">-</strong></p>
+                <button onclick="copyReferralCode()" class="btn-copy-code">
+                    <i class="fas fa-copy"></i> Nakili Namba
+                </button>
+            </div>
+        </div>
+        
+        <!-- Referral List -->
+        <div class="referral-list-card">
+            <h3><i class="fas fa-list"></i> Orodha ya Warejea Wako</h3>
+            <div class="referral-list" id="referralList">
+                <p class="text-center p-3">Bado huna warejea. Anza kushiriki sasa!</p>
+            </div>
+        </div>
+        
+        <!-- Referral Bonus History -->
+        <div class="referral-history-card">
+            <h3><i class="fas fa-history"></i> Historia ya Bonasi za Rufaa</h3>
+            <div class="referral-history-list" id="referralBonusHistory">
+                <!-- Bonus history will be populated here -->
+            </div>
+        </div>
+    </div>
+</section>
+
+            <!-- Deposit Section -->
+            <section id="depositSection" class="content-section">
+                <div class="form-card">
+                    <h2>Amana ya Fedha</h2>
+                    <form id="depositForm" onsubmit="handleDeposit(event)">
+                        <div class="form-group">
+                            <label>Chagua Akaunti ya Benki</label>
+                            <select id="bankAccount" class="form-control" required>
+                                <option value="">Chagua akaunti...</option>
+                                <!-- Bank accounts added by admin -->
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jina Kamili la Mtumaji</label>
+                            <input type="text" id="senderName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Namba ya Simu</label>
+                            <input type="tel" id="senderPhone" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Kiasi (TZS)</label>
+                            <input type="number" id="depositAmount" class="form-control" min="5000" required>
+                        </div>
+                        <button type="button" class="btn-primary w-100" onclick="showBankDetails()">
+                            Endelea na Malipo
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Withdraw Section -->
+            <section id="withdrawSection" class="content-section">
+                <div class="form-card">
+                    <h2>Kutoa Fedha</h2>
+                    <div class="withdrawal-info">
+                        <p>Ada ya kutoa: <strong>10%</strong> (Bure kwa uondoaji wa kwanza)</p>
+                    </div>
+                    <form id="withdrawForm" onsubmit="handleWithdraw(event)">
+                        <div class="form-group">
+                            <label>Chagua Akaunti ya Benki</label>
+                            <select id="withdrawBankAccount" class="form-control" required>
+                                <option value="">Chagua akaunti...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Kiasi (TZS)</label>
+                            <div class="amount-input-group">
+                                <input type="number" id="withdrawAmount" class="form-control" min="10000" required oninput="calculateWithdrawalFee()">
+                                <div class="quick-amounts">
+                                    <button type="button" onclick="setWithdrawAmount(50000)">50k</button>
+                                    <button type="button" onclick="setWithdrawAmount(100000)">100k</button>
+                                    <button type="button" onclick="setWithdrawAmount(200000)">200k</button>
+                                    <button type="button" onclick="setWithdrawAmount(500000)">500k</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fee-display">
+                            <p>Ada ya kutoa: <span id="withdrawalFee">TZS 0.00</span></p>
+                            <p>Utapokea: <span id="receivedAmount">TZS 0.00</span></p>
+                        </div>
+                        <div class="form-group">
+                            <label>Jina Kamili la Mpokeaji</label>
+                            <input type="text" id="receiverName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Namba ya Simu ya Mpokeaji</label>
+                            <input type="tel" id="receiverPhone" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn-primary w-100">
+                            Tuma Ombi la Kutoa
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- History Section -->
+            <section id="historySection" class="content-section">
+                <h2>Historia ya Shughuli</h2>
+                <div class="history-tabs">
+                    <button class="history-tab active" onclick="filterHistory('all')">Zote</button>
+                    <button class="history-tab" onclick="filterHistory('deposit')">Amana</button>
+                    <button class="history-tab" onclick="filterHistory('withdraw')">Uondoaji</button>
+                    <button class="history-tab" onclick="filterHistory('purchase')">Ununuzi</button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- History items will be populated here -->
+                </div>
+            </section>
+
+<!-- Profile Section -->
+<section id="profileSection" class="content-section">
+    <div class="profile-container">
+        
+        <!-- Profile Header with Quick Actions -->
+        <div class="profile-header-card">
+            <div class="profile-avatar-section">
+                <div class="profile-avatar-large">
+                    <img src="https://ui-avatars.com/api/?name=User&background=FF6B35&color=fff&size=100" 
+                         alt="Profile" 
+                         id="profileAvatarImg">
+                    <button class="change-avatar-btn" onclick="changeProfileAvatar()" title="Badilisha picha">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <div class="profile-name-section">
+                    <h2 id="profileDisplayName">Mtumiaji</h2>
+                    <p id="profileDisplayUsername">@username</p>
+                    <span class="profile-role-badge" id="profileRoleBadge">Mtumiaji</span>
+                </div>
+            </div>
+            
+            <!-- Quick Action Buttons -->
+            <div class="profile-quick-actions">
+                <button class="quick-action-btn" onclick="showSection('deposit')">
+                    <i class="fas fa-arrow-circle-down"></i>
+                    <span>Amana</span>
+                </button>
+                <button class="quick-action-btn" onclick="showSection('withdraw')">
+                    <i class="fas fa-arrow-circle-up"></i>
+                    <span>Kutoa</span>
+                </button>
+                <button class="quick-action-btn" onclick="showSection('marketplace')">
+                    <i class="fas fa-store"></i>
+                    <span>Soko</span>
+                </button>
+                <button class="quick-action-btn" onclick="showSection('referral')">
+                    <i class="fas fa-users"></i>
+                    <span>Rufaa</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Stats Mini Cards -->
+        <div class="profile-stats-row">
+            <div class="profile-stat-mini">
+                <i class="fas fa-wallet"></i>
+                <div>
+                    <span class="stat-value" id="profileBalance">TZS 0</span>
+                    <span class="stat-label">Salio</span>
+                </div>
+            </div>
+            <div class="profile-stat-mini">
+                <i class="fas fa-chart-line"></i>
+                <div>
+                    <span class="stat-value" id="profileEarnings">TZS 0</span>
+                    <span class="stat-label">Mapato</span>
+                </div>
+            </div>
+            <div class="profile-stat-mini">
+                <i class="fas fa-glass-cheers"></i>
+                <div>
+                    <span class="stat-value" id="profileDrinks">0</span>
+                    <span class="stat-label">Vinywaji</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Details Form -->
+        <div class="profile-card">
+            <div class="card-header-with-icon">
+                <i class="fas fa-user-edit"></i>
+                <h3>Taarifa Binafsi</h3>
+            </div>
+            <form class="profile-form" onsubmit="updateProfile(event)">
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>Jina la Mtumiaji</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-user"></i>
+                            <input type="text" id="profileUsername" class="form-control" readonly>
+                        </div>
+                        <small class="form-hint">Jina la mtumiaji haliwezi kubadilishwa</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Jina Kamili</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-id-card"></i>
+                            <input type="text" id="profileFullname" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row-2col">
+                    <div class="form-group">
+                        <label>Barua Pepe</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="profileEmail" class="form-control" readonly>
+                        </div>
+                        <small class="form-hint">Barua pepe haliwezi kubadilishwa</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Namba ya Simu</label>
+                        <div class="input-with-icon">
+                            <i class="fas fa-phone"></i>
+                            <input type="tel" id="profilePhone" class="form-control" placeholder="+255 7XX XXX XXX">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Namba ya Rufaa</label>
+                    <div class="referral-display-box">
+                        <span id="profileReferralCode">-</span>
+                        <button type="button" class="btn-copy-sm" onclick="copyProfileReferral()">
+                            <i class="fas fa-copy"></i> Nakili
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn-save-profile">
+                    <i class="fas fa-save"></i> Hifadhi Mabadiliko
+                </button>
+            </form>
+        </div>
+
+        <!-- Bank Accounts Card -->
+        <div class="profile-card">
+            <div class="card-header-with-icon">
+                <i class="fas fa-university"></i>
+                <h3>Akaunti za Benki</h3>
+                <button class="btn-add-item" onclick="showAddBankAccountForm()">
+                    <i class="fas fa-plus"></i> Ongeza Akaunti
+                </button>
+            </div>
+            
+            <!-- Add Bank Account Form (Hidden by default) -->
+            <div class="add-bank-form" id="addBankForm" style="display: none;">
+                <h4>Ongeza Akaunti Mpya ya Benki</h4>
+                <form onsubmit="saveUserBankAccount(event)">
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label>Jina la Benki</label>
+                            <select id="bankNameSelect" class="form-control" required>
+                                <option value="">Chagua benki...</option>
+    <option value="M-Pesa">📱 M-Pesa (Vodacom)</option>
+<option value="Tigo Pesa">📱 Tigo Pesa (Tigo)</option>
+<option value="Airtel Money">📱 Airtel Money (Airtel)</option>
+<option value="HaloPesa">📱 HaloPesa (Halotel)</option>
+<option value="AzamPesa">📱 AzamPesa (Azam)</option>
+<option value="TTCL Pesa">📱 TTCL Pesa</option>
+                                <option value="Other">Nyingine...</option>
+                            </select>
+                        </div>
+            
+                        <div class="form-group" id="otherBankGroup" style="display: none;">
+                            <label>Taja Jina la Benki</label>
+                            <input type="text" id="otherBankName" class="form-control" placeholder="Jina la benki">
+                        </div>
+                    </div>
+                    <div class="form-row-2col">
+                        <div class="form-group">
+                            <label>Namba ya Akaunti</label>
+                            <input type="text" id="newAccountNumber" class="form-control" placeholder="Mf. 0150XXXXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Jina la Mwenye Akaunti</label>
+                            <input type="text" id="newAccountHolder" class="form-control" placeholder="Jina kamili kama lilivyo kwenye benki" required>
+                        </div>
+                    </div>
+                    <div class="form-buttons-row">
+                        <button type="submit" class="btn-save-profile">
+                            <i class="fas fa-save"></i> Hifadhi Akaunti
+                        </button>
+                        <button type="button" class="btn-cancel" onclick="hideAddBankAccountForm()">
+                            <i class="fas fa-times"></i> Ghairi
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Bank Accounts List -->
+            <div class="bank-accounts-list" id="profileBankAccountsList">
+                <div class="empty-state">
+                    <i class="fas fa-university"></i>
+                    <p>Huna akaunti za benki</p>
+                    <button class="btn-add-item" onclick="showAddBankAccountForm()">
+                        <i class="fas fa-plus"></i> Ongeza Akaunti
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Account Info Card -->
+        <div class="profile-card">
+            <div class="card-header-with-icon">
+                <i class="fas fa-info-circle"></i>
+                <h3>Taarifa za Akaunti</h3>
+            </div>
+            <div class="account-info-grid">
+                <div class="info-item">
+                    <span class="info-label">Tarehe ya Kujiunga</span>
+                    <span class="info-value" id="profileJoinDate">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Hali ya Akaunti</span>
+                    <span class="info-value status-active" id="profileStatus">Inatumika</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Jumla ya Warejea</span>
+                    <span class="info-value" id="profileReferrals">0</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Bonasi za Rufaa</span>
+                    <span class="info-value text-success" id="profileReferralBonus">TZS 0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        </main>
+    </div>
+    
+<!-- ADMIN DASHBOARD -->
+<div id="adminDashboard" class="dashboard-container" style="display: none;">
+    <!-- Top Navigation -->
+<!-- Top Navigation - Admin Dashboard -->
+<nav class="top-nav">
+    <div class="nav-brand">
+        <button class="hamburger-menu" id="adminHamburger" onclick="toggleAdminSidebar()" aria-label="Menu">
+            <span></span>
+        </button>
+        <div class="brand-logo">
+            <i class="fas fa-glass-whiskey"></i>
+            <span>CashCola Admin</span>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <div class="notification-bell" onclick="toggleAdminNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="adminNotificationCount">0</span>
+        </div>
+        <div class="notification-dropdown" id="adminNotificationDropdown">
+            <div class="notification-header">
+                <h4>Arifa</h4>
+                <button onclick="markAllNotificationsRead()">Soma Zote</button>
+            </div>
+            <div class="notification-list" id="adminNotificationList"></div>
+        </div>
+        <div class="user-dropdown" onclick="toggleAdminUserMenu()">
+            <img src="https://via.placeholder.com/40" alt="Admin" class="user-avatar">
+            <span id="adminUsername">Admin</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="dropdown-menu" id="adminUserDropdown">
+            <a href="#" onclick="showAdminProfile()"><i class="fas fa-user-circle"></i> Wasifu</a>
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Toka</a>
+        </div>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="adminSidebarOverlay" onclick="closeAdminSidebar()"></div>
+
+    <!-- Admin Sidebar -->
+    <aside class="sidebar admin-sidebar" id="adminSidebar">
+        <div class="admin-profile-summary">
+            <img src="https://via.placeholder.com/60" alt="Admin" class="admin-avatar">
+            <h5 id="sidebarAdminName">Admin Jina</h5>
+            <span class="admin-role-badge">Msimamizi</span>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="showAdminSection('adminOverview')">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Muhtasari</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showAdminSection('adminUserManagement')">
+                <i class="fas fa-users-cog"></i>
+                <span>Usimamizi wa Watumiaji</span>
+                <span class="pending-badge" id="pendingUsersBadge">0</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showAdminSection('adminDeposits')">
+                <i class="fas fa-arrow-circle-down"></i>
+                <span>Uidhinishaji wa Amana</span>
+                <span class="pending-badge" id="pendingDepositsBadge">0</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showAdminSection('adminWithdrawals')">
+                <i class="fas fa-arrow-circle-up"></i>
+                <span>Uidhinishaji wa Uondoaji</span>
+                <span class="pending-badge" id="pendingWithdrawalsBadge">0</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showAdminSection('adminTransactions')">
+                <i class="fas fa-exchange-alt"></i>
+                <span>Miamala Yote</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showAdminSection('adminReports')">
+                <i class="fas fa-chart-bar"></i>
+                <span>Ripoti</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showAdminSection('adminSettings')">
+                <i class="fas fa-cog"></i>
+                <span>Mipangilio</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Admin Main Content -->
+    <main class="main-content admin-content">
+        <!-- Admin Overview Section -->
+        <section id="adminOverviewSection" class="content-section active">
+            <h2 class="section-title">Muhtasari wa Jumla</h2>
+            
+            <!-- Quick Stats -->
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon users-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Jumla ya Watumiaji</h3>
+                        <p id="totalUsers">0</p>
+                        <span class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i> 12% wiki hii
+                        </span>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon deposits-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Amana Zote</h3>
+                        <p id="totalDeposits">TZS 0</p>
+                        <span class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i> Leo
+                        </span>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon withdrawals-icon">
+                        <i class="fas fa-hand-holding-usd"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Uondoaji Wote</h3>
+                        <p id="totalWithdrawals">TZS 0</p>
+                        <span class="stat-trend">Mwezi huu</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon profit-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Faida ya Kampuni</h3>
+                        <p id="companyProfit">TZS 0</p>
+                        <span class="stat-trend positive">
+                            <i class="fas fa-arrow-up"></i> Mwezi huu
+                        </span>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon purchases-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Ununuzi wa Vinywaji</h3>
+                        <p id="totalPurchases">0</p>
+                        <span class="stat-trend">Leo</span>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon pending-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Zinazosubiri</h3>
+                        <p id="pendingRequests">0</p>
+                        <span class="stat-trend warning">Zinahitaji hatua</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities & Notices -->
+            <div class="admin-grid-2col">
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3>Shughuli za Hivi Karibuni</h3>
+                        <button class="btn-sm" onclick="refreshActivities()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="activity-feed" id="adminActivityFeed">
+                        <!-- Activities will be populated -->
+                    </div>
+                </div>
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3>Notisi za Haraka</h3>
+                        <button class="btn-sm btn-primary" onclick="addNotice()">
+                            <i class="fas fa-plus"></i> Ongeza
+                        </button>
+                    </div>
+                    <div class="notice-board" id="adminNoticeBoard">
+                        <!-- Notices will be populated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Charts -->
+            <div class="admin-charts-grid">
+                <div class="admin-card chart-card">
+                    <h3>Mwenendo wa Amana (Siku 7)</h3>
+                    <canvas id="depositsChart"></canvas>
+                </div>
+                <div class="admin-card chart-card">
+                    <h3>Mwenendo wa Uondoaji (Siku 7)</h3>
+                    <canvas id="withdrawalsChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- User Management Section -->
+        <section id="adminUserManagementSection" class="content-section">
+            <div class="section-header">
+                <h2>Usimamizi wa Watumiaji</h2>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="userSearchInput" placeholder="Tafuta mtumiaji..." oninput="searchUsers()">
+                    </div>
+                    <button class="btn-primary" onclick="exportUsers()">
+                        <i class="fas fa-download"></i> Pakua
+                    </button>
+                </div>
+            </div>
+            
+            <div class="user-filters">
+                <button class="filter-btn active" onclick="filterUsers('all')">Wote</button>
+                <button class="filter-btn" onclick="filterUsers('active')">Walio hai</button>
+                <button class="filter-btn" onclick="filterUsers('suspended')">Waliosimamishwa</button>
+                <button class="filter-btn" onclick="filterUsers('new')">Wapya Leo</button>
+            </div>
+
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Mtumiaji</th>
+                            <th>Jina Kamili</th>
+                            <th>Barua Pepe</th>
+                            <th>Salio</th>
+                            <th>Hali</th>
+                            <th>Tarehe ya Kujiunga</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <!-- Users will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="pagination" id="usersPagination">
+                <!-- Pagination will be generated -->
+            </div>
+        </section>
+
+        <!-- Deposit Approvals Section -->
+        <section id="adminDepositsSection" class="content-section">
+            <div class="section-header">
+                <h2>Uidhinishaji wa Amana</h2>
+                <div class="deposit-filters">
+                    <button class="filter-btn active" onclick="filterDeposits('pending')">Zinazosubiri</button>
+                    <button class="filter-btn" onclick="filterDeposits('approved')">Zilizoidhinishwa</button>
+                    <button class="filter-btn" onclick="filterDeposits('rejected')">Zilizokataliwa</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Mtumiaji</th>
+                            <th>Kiasi</th>
+                            <th>Benki</th>
+                            <th>Jina la Mtumaji</th>
+                            <th>Namba ya Simu</th>
+                            <th>Kitambulisho</th>
+                            <th>Tarehe</th>
+                            <th>Hali</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="depositsTableBody">
+                        <!-- Deposits will be populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Withdrawal Approvals Section -->
+        <section id="adminWithdrawalsSection" class="content-section">
+            <div class="section-header">
+                <h2>Uidhinishaji wa Uondoaji</h2>
+                <div class="withdrawal-filters">
+                    <button class="filter-btn active" onclick="filterWithdrawals('pending')">Zinazosubiri</button>
+                    <button class="filter-btn" onclick="filterWithdrawals('approved')">Zilizoidhinishwa</button>
+                    <button class="filter-btn" onclick="filterWithdrawals('rejected')">Zilizokataliwa</button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Mtumiaji</th>
+                            <th>Kiasi</th>
+                            <th>Ada</th>
+                            <th>Benki</th>
+                            <th>Mpokeaji</th>
+                            <th>Simu</th>
+                            <th>Tarehe</th>
+                            <th>Hali</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawalsTableBody">
+                        <!-- Withdrawals will be populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- All Transactions Section -->
+        <section id="adminTransactionsSection" class="content-section">
+            <div class="section-header">
+                <h2>Miamala Yote</h2>
+                <div class="transactions-summary">
+                    <div class="summary-item">
+                        <span>Amana: <strong id="summaryDeposits">TZS 0</strong></span>
+                    </div>
+                    <div class="summary-item">
+                        <span>Uondoaji: <strong id="summaryWithdrawals">TZS 0</strong></span>
+                    </div>
+                    <div class="summary-item profit">
+                        <span>Faida: <strong id="summaryProfit">TZS 0</strong></span>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Aina</th>
+                            <th>Mtumiaji</th>
+                            <th>Kiasi</th>
+                            <th>Ada</th>
+                            <th>Tarehe</th>
+                            <th>Hali</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionsTableBody">
+                        <!-- All transactions will be populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Reports Section -->
+        <section id="adminReportsSection" class="content-section">
+            <h2>Ripoti na Takwimu</h2>
+            <div class="reports-grid">
+                <div class="report-card">
+                    <h3>Mapato ya Leo</h3>
+                    <div class="report-chart">
+                        <canvas id="dailyRevenueChart"></canvas>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <h3>Watumiaji Wapya</h3>
+                    <div class="report-chart">
+                        <canvas id="newUsersChart"></canvas>
+                    </div>
+                </div>
+                <div class="report-card">
+                    <h3>Vinywaji Vilivyouzwa</h3>
+                    <div class="report-chart">
+                        <canvas id="drinksSoldChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="adminSettingsSection" class="content-section">
+            <h2>Mipangilio ya Admin</h2>
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>Wasifu wa Admin</h3>
+                    <form onsubmit="updateAdminProfile(event)">
+                        <div class="form-group">
+                            <label>Jina Kamili</label>
+                            <input type="text" id="adminFullname" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Barua Pepe</label>
+                            <input type="email" id="adminEmail" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Nenosiri Jipya</label>
+                            <input type="password" id="adminNewPassword" class="form-control">
+                        </div>
+                        <button type="submit" class="btn-primary">Hifadhi Mabadiliko</button>
+                    </form>
+                </div>
+                <div class="settings-card">
+                    <h3>Mipangilio ya Tovuti</h3>
+                    <form onsubmit="updateSiteSettings(event)">
+                        <div class="form-group">
+                            <label>Asilimia ya Ada ya Uondoaji (%)</label>
+                            <input type="number" id="withdrawalFeePercent" class="form-control" value="10">
+                        </div>
+                        <div class="form-group">
+                            <label>Kiwango cha Chini cha Amana (TZS)</label>
+                            <input type="number" id="minDeposit" class="form-control" value="5000">
+                        </div>
+                        <div class="form-group">
+                            <label>Kiwango cha Chini cha Uondoaji (TZS)</label>
+                            <input type="number" id="minWithdrawal" class="form-control" value="10000">
+                        </div>
+                        <button type="submit" class="btn-primary">Hifadhi</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- SUPER ADMIN DASHBOARD -->
+<div id="superAdminDashboard" class="dashboard-container" style="display: none;">
+    <!-- Top Navigation -->
+<!-- Top Navigation - Super Admin Dashboard -->
+<nav class="top-nav super-admin-nav">
+    <div class="nav-brand">
+        <button class="hamburger-menu" id="superAdminHamburger" onclick="toggleSuperAdminSidebar()" aria-label="Menu">
+            <span></span>
+        </button>
+        <div class="brand-logo">
+            <i class="fas fa-crown"></i>
+            <span>CashCola Super Admin</span>
+        </div>
+    </div>
+    <div class="nav-actions">
+        <div class="user-dropdown" onclick="toggleSuperAdminUserMenu()">
+            <img src="https://via.placeholder.com/40" alt="Super Admin" class="user-avatar">
+            <span id="superAdminUsername">Super Admin</span>
+            <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="dropdown-menu" id="superAdminUserDropdown">
+            <a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Toka</a>
+        </div>
+    </div>
+</nav>
+
+<div class="sidebar-overlay" id="superAdminSidebarOverlay" onclick="closeSuperAdminSidebar()"></div>
+
+    <!-- Super Admin Sidebar -->
+    <aside class="sidebar super-admin-sidebar" id="superAdminSidebar">
+        <div class="admin-profile-summary">
+            <div class="crown-icon">
+                <i class="fas fa-crown"></i>
+            </div>
+            <h5 id="sidebarSuperAdminName">Super Admin</h5>
+            <span class="admin-role-badge super-admin-badge">Msimamizi Mkuu</span>
+        </div>
+        <div class="sidebar-menu">
+            <a href="#" class="menu-item active" onclick="showSuperAdminSection('superOverview')">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Muhtasari Mkuu</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superUserManagement')">
+                <i class="fas fa-users"></i>
+                <span>Watumiaji Wote</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superAdminManagement')">
+                <i class="fas fa-user-shield"></i>
+                <span>Wasimamizi</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superTransactionAnalysis')">
+                <i class="fas fa-calculator"></i>
+                <span>Uchambuzi wa Miamala</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superMarketplace')">
+                <i class="fas fa-store-alt"></i>
+                <span>Soko la Vinywaji</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superSlideshow')">
+                <i class="fas fa-images"></i>
+                <span>Slideshow</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superBankAccounts')">
+                <i class="fas fa-university"></i>
+                <span>Akaunti za Benki</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superSettings')">
+                <i class="fas fa-cogs"></i>
+                <span>Mipangilio</span>
+            </a>
+            <a href="#" class="menu-item" onclick="showSuperAdminSection('superSocialLinks')">
+    <i class="fas fa-share-alt"></i>
+    <span>Social Links</span>
+</a>
+        </div>
+    </aside>
+
+    <!-- Super Admin Main Content -->
+    <main class="main-content super-admin-content">
+        <!-- Super Overview -->
+        <section id="superOverviewSection" class="content-section active">
+            <h2 class="section-title">Muhtasari Mkuu wa Mfumo</h2>
+            
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon users-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Watumiaji Wote</h3>
+                        <p id="superTotalUsers">0</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon admins-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Wasimamizi</h3>
+                        <p id="superTotalAdmins">0</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon revenue-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Mapato Yote</h3>
+                        <p id="superTotalRevenue">TZS 0</p>
+                    </div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon profit-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <div class="admin-stat-info">
+                        <h3>Faida ya Kampuni</h3>
+                        <p id="superCompanyProfit">TZS 0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="admin-card system-health">
+                <h3>Afya ya Mfumo</h3>
+                <div class="health-metrics">
+                    <div class="health-item">
+                        <span>Hifadhidata</span>
+                        <div class="health-bar">
+                            <div class="health-fill" style="width: 95%"></div>
+                        </div>
+                        <span>95%</span>
+                    </div>
+                    <div class="health-item">
+                        <span>Watumiaji Hai</span>
+                        <div class="health-bar">
+                            <div class="health-fill active" style="width: 78%"></div>
+                        </div>
+                        <span>78%</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Social Links Management Section -->
+<section id="superSocialLinksSection" class="content-section">
+    <div class="section-header">
+        <h2><i class="fas fa-share-alt"></i> Social Media Links Management</h2>
+        <button class="btn-primary" onclick="showAddSocialLinkModal()">
+            <i class="fas fa-plus"></i> Add Social Link
+        </button>
+    </div>
+    
+    <div class="social-links-manage-grid" id="manageSocialLinksGrid">
+        <!-- Managed social links populated here -->
+    </div>
+</section>
+
+<!-- Add/Edit Social Link Modal -->
+<div id="addSocialLinkModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeAddSocialLinkModal()">&times;</span>
+        <h3 id="socialLinkModalTitle">
+            <i class="fas fa-plus-circle"></i> Add Social Link
+        </h3>
+        <form onsubmit="saveSocialLink(event)">
+            <input type="hidden" id="editSocialLinkId">
+            
+            <div class="form-group">
+                <label>Choose Social Media Icon</label>
+                <div class="social-icon-selector" id="socialIconSelector">
+                    <div class="social-icon-option" data-icon="facebook" onclick="selectSocialIcon('facebook')">
+                        <i class="fab fa-facebook"></i>
+                        <span>Facebook</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="instagram" onclick="selectSocialIcon('instagram')">
+                        <i class="fab fa-instagram"></i>
+                        <span>Instagram</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="twitter" onclick="selectSocialIcon('twitter')">
+                        <i class="fab fa-twitter"></i>
+                        <span>Twitter</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="tiktok" onclick="selectSocialIcon('tiktok')">
+                        <i class="fab fa-tiktok"></i>
+                        <span>TikTok</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="youtube" onclick="selectSocialIcon('youtube')">
+                        <i class="fab fa-youtube"></i>
+                        <span>YouTube</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="telegram" onclick="selectSocialIcon('telegram')">
+                        <i class="fab fa-telegram"></i>
+                        <span>Telegram</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="whatsapp" onclick="selectSocialIcon('whatsapp')">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>WhatsApp</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="linkedin" onclick="selectSocialIcon('linkedin')">
+                        <i class="fab fa-linkedin"></i>
+                        <span>LinkedIn</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="discord" onclick="selectSocialIcon('discord')">
+                        <i class="fab fa-discord"></i>
+                        <span>Discord</span>
+                    </div>
+                    <div class="social-icon-option" data-icon="globe" onclick="selectSocialIcon('globe')">
+                        <i class="fas fa-globe"></i>
+                        <span>Website</span>
+                    </div>
+                </div>
+                <input type="hidden" id="selectedSocialIcon" value="">
+            </div>
+            
+            <div class="form-group">
+                <label>Link Title</label>
+                <input type="text" id="socialLinkTitle" class="form-control" 
+                       placeholder="e.g., Follow us on Instagram" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Link URL</label>
+                <input type="url" id="socialLinkUrl" class="form-control" 
+                       placeholder="https://..." required>
+            </div>
+            
+            <div class="form-group">
+                <label>Description (Optional)</label>
+                <textarea id="socialLinkDescription" class="form-control" rows="2" 
+                          placeholder="Brief description..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="socialLinkActive" checked>
+                    Active (Show to users)
+                </label>
+            </div>
+            
+            <button type="submit" class="btn-primary w-100">
+                <i class="fas fa-save"></i> Save Social Link
+            </button>
+        </form>
+    </div>
+</div> 
+
+        <!-- Super User Management -->
+        <section id="superUserManagementSection" class="content-section">
+            <div class="section-header">
+                <h2>Usimamizi wa Watumiaji Wote</h2>
+                <button class="btn-primary" onclick="showAddUserModal()">
+                    <i class="fas fa-user-plus"></i> Ongeza Mtumiaji
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Mtumiaji</th>
+                            <th>Jina Kamili</th>
+                            <th>Barua Pepe</th>
+                            <th>Salio</th>
+                            <th>Hali</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="superUsersTableBody">
+                        <!-- Users will be populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+<!-- Super Admin Management Section -->
+<section id="superAdminManagementSection" class="content-section">
+    <div class="section-header">
+        <h2><i class="fas fa-user-shield"></i> Usimamizi wa Wasimamizi</h2>
+        <button class="btn-primary" onclick="showAddAdminModal()">
+            <i class="fas fa-user-plus"></i> Ongeza Msimamizi
+        </button>
+    </div>
+    
+    <!-- Admin Stats -->
+    <div class="admin-stats-mini" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:20px;">
+        <div style="background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+            <small style="color:#666;">Jumla ya Wasimamizi</small>
+            <h3 style="margin:5px 0 0;font-size:24px;" id="totalAdminsCount">0</h3>
+        </div>
+        <div style="background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+            <small style="color:#666;">Wanaofanya kazi</small>
+            <h3 style="margin:5px 0 0;font-size:24px;color:#1A936F;" id="activeAdminsCount">0</h3>
+        </div>
+        <div style="background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+            <small style="color:#666;">Waliosimamishwa</small>
+            <h3 style="margin:5px 0 0;font-size:24px;color:#EF233C;" id="suspendedAdminsCount">0</h3>
+        </div>
+    </div>
+    
+    <!-- Search -->
+    <div style="margin-bottom:20px;">
+        <div class="search-box" style="max-width:400px;">
+            <i class="fas fa-search"></i>
+            <input type="text" id="adminSearchInput" placeholder="Tafuta msimamizi..." oninput="searchAdmins()">
+        </div>
+    </div>
+    
+    <!-- Admins Table -->
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Msimamizi</th>
+                    <th>Barua Pepe</th>
+                    <th>Hali</th>
+                    <th>Tarehe ya Kuongezwa</th>
+                    <th>Shughuli</th>
+                    <th>Vitendo</th>
+                </tr>
+            </thead>
+            <tbody id="adminsTableBody">
+                <tr><td colspan="6" class="text-center p-4">Inapakia...</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ============================================ -->
+<!-- ADMIN ACTION MODALS -->
+<!-- ============================================ -->
+
+<!-- View Admin Modal -->
+<div id="viewAdminModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close-modal" onclick="closeViewAdminModal()">&times;</span>
+        <div id="viewAdminContent"></div>
+    </div>
+</div>
+
+<!-- Edit Admin Modal -->
+<div id="editAdminModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeEditAdminModal()">&times;</span>
+        <h3><i class="fas fa-edit"></i> Hariri Msimamizi</h3>
+        <form onsubmit="updateAdminDetails(event)">
+            <input type="hidden" id="editAdminId">
+            <div class="form-group">
+                <label>Jina Kamili</label>
+                <input type="text" id="editAdminFullname" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Barua Pepe</label>
+                <input type="email" id="editAdminEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Jina la Mtumiaji</label>
+                <input type="text" id="editAdminUsername" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nenosiri Jipya (acha wazi kama hutaki kubadilisha)</label>
+                <input type="password" id="editAdminPassword" class="form-control" placeholder="Acha wazi...">
+            </div>
+            <div class="form-group">
+                <label>Namba ya Simu</label>
+                <input type="tel" id="editAdminPhone" class="form-control">
+            </div>
+            <button type="submit" class="btn-primary w-100">
+                <i class="fas fa-save"></i> Hifadhi Mabadiliko
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Suspend Admin Modal -->
+<div id="suspendAdminModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeSuspendAdminModal()">&times;</span>
+        <div style="text-align:center;">
+            <div style="width:70px;height:70px;border-radius:50%;background:#fff3cd;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
+                <i class="fas fa-pause-circle" style="font-size:36px;color:#F39C12;"></i>
+            </div>
+            <h3>Simamisha Msimamizi</h3>
+            <p style="color:#666;margin-bottom:20px;">Msimamizi hataweza kufanya shughuli zozote hadi atakapowashwa tena.</p>
+            <input type="hidden" id="suspendAdminId">
+            <div class="form-group">
+                <label>Sababu ya Kusimamisha</label>
+                <textarea id="suspendReason" class="form-control" rows="3" placeholder="Eleza sababu..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-primary" onclick="confirmSuspendAdmin()" style="flex:1;background:#F39C12;">
+                    <i class="fas fa-pause"></i> Simamisha
+                </button>
+                <button class="btn-cancel" onclick="closeSuspendAdminModal()" style="flex:1;">Ghairi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Admin Modal -->
+<div id="deleteAdminModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeDeleteAdminModal()">&times;</span>
+        <div style="text-align:center;">
+            <div style="width:70px;height:70px;border-radius:50%;background:#fce4ec;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
+                <i class="fas fa-trash-alt" style="font-size:36px;color:#EF233C;"></i>
+            </div>
+            <h3 style="color:#EF233C;">Futa Msimamizi</h3>
+            <p style="color:#666;margin-bottom:20px;">Una uhakika unataka kumfuta msimamizi huyu? Atabadilishwa kuwa mtumiaji wa kawaida.</p>
+            <input type="hidden" id="deleteAdminId">
+            <div id="deleteAdminInfo" style="background:#f8f9fa;padding:12px;border-radius:8px;margin-bottom:15px;text-align:left;"></div>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-primary" onclick="confirmDeleteAdmin()" style="flex:1;background:#EF233C;">
+                    <i class="fas fa-trash"></i> Futa
+                </button>
+                <button class="btn-cancel" onclick="closeDeleteAdminModal()" style="flex:1;">Ghairi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Warn Admin Modal -->
+<div id="warnAdminModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeWarnAdminModal()">&times;</span>
+        <div style="text-align:center;">
+            <div style="width:70px;height:70px;border-radius:50%;background:#fff3cd;display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
+                <i class="fas fa-exclamation-triangle" style="font-size:36px;color:#FFD166;"></i>
+            </div>
+            <h3>Onyo kwa Msimamizi</h3>
+            <p style="color:#666;margin-bottom:20px;">Tuma onyo kwa msimamizi huyu kuhusu utendaji wake.</p>
+            <input type="hidden" id="warnAdminId">
+            <div class="form-group">
+                <label>Aina ya Onyo</label>
+                <select id="warnType" class="form-control">
+                    <option value="minor">Onyo Ndogo</option>
+                    <option value="moderate">Onyo la Wastani</option>
+                    <option value="severe">Onyo Kali</option>
+                    <option value="final">Onyo la Mwisho</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Ujumbe wa Onyo</label>
+                <textarea id="warnMessage" class="form-control" rows="3" placeholder="Andika ujumbe wa onyo..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-primary" onclick="confirmWarnAdmin()" style="flex:1;background:#FFD166;color:#333;">
+                    <i class="fas fa-exclamation-triangle"></i> Tuma Onyo
+                </button>
+                <button class="btn-cancel" onclick="closeWarnAdminModal()" style="flex:1;">Ghairi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Review Admin Modal -->
+<div id="reviewAdminModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close-modal" onclick="closeReviewAdminModal()">&times;</span>
+        <div id="reviewAdminContent"></div>
+    </div>
+</div>
+
+        <!-- Transaction Analysis -->
+        <section id="superTransactionAnalysisSection" class="content-section">
+            <h2>Uchambuzi wa Miamala na Faida</h2>
+            
+            <div class="analysis-summary">
+                <div class="analysis-card deposits">
+                    <h3>Jumla ya Amana</h3>
+                    <p id="analysisDeposits">TZS 0</p>
+                </div>
+                <div class="analysis-card withdrawals">
+                    <h3>Jumla ya Uondoaji</h3>
+                    <p id="analysisWithdrawals">TZS 0</p>
+                </div>
+                <div class="analysis-card fees">
+                    <h3>Jumla ya Ada</h3>
+                    <p id="analysisFees">TZS 0</p>
+                </div>
+                <div class="analysis-card profit">
+                    <h3>Faida ya Kampuni</h3>
+                    <p id="analysisProfit">TZS 0</p>
+                </div>
+            </div>
+            
+            <div class="admin-card">
+                <h3>Miamala ya Hivi Karibuni</h3>
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Tarehe</th>
+                                <th>Aina</th>
+                                <th>Mtumiaji</th>
+                                <th>Kiasi</th>
+                                <th>Ada</th>
+                                <th>Faida</th>
+                            </tr>
+                        </thead>
+                        <tbody id="analysisTableBody">
+                            <!-- Analysis data will be populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Super Marketplace Management -->
+        <section id="superMarketplaceSection" class="content-section">
+            <div class="section-header">
+                <h2>Usimamizi wa Soko la Vinywaji</h2>
+                <button class="btn-primary" onclick="showAddDrinkModal()">
+                    <i class="fas fa-plus"></i> Ongeza Kinywaji
+                </button>
+            </div>
+            <div class="drinks-management-grid" id="manageDrinksGrid">
+                <!-- Managed drinks will be populated -->
+            </div>
+        </section>
+
+        <!-- Super Slideshow Management -->
+        <section id="superSlideshowSection" class="content-section">
+            <div class="section-header">
+                <h2>Usimamizi wa Slideshow</h2>
+                <button class="btn-primary" onclick="showAddSlideModal()">
+                    <i class="fas fa-plus"></i> Ongeza Slide
+                </button>
+            </div>
+            <div class="slides-management-list" id="manageSlidesList">
+                <!-- Managed slides will be populated -->
+            </div>
+        </section>
+
+        <!-- Bank Accounts Management -->
+        <section id="superBankAccountsSection" class="content-section">
+            <div class="section-header">
+                <h2>Usimamizi wa Akaunti za Benki</h2>
+                <button class="btn-primary" onclick="showAddBankAccountModal()">
+                    <i class="fas fa-plus"></i> Ongeza Akaunti ya Benki
+                </button>
+            </div>
+            <div class="table-responsive">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Jina la Benki</th>
+                            <th>Namba ya Akaunti</th>
+                            <th>Jina la Mwenye Akaunti</th>
+                            <th>Hali</th>
+                            <th>Vitendo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bankAccountsTableBody">
+                        <!-- Bank accounts will be populated -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Super Settings -->
+        <section id="superSettingsSection" class="content-section">
+            <h2>Mipangilio ya Mfumo</h2>
+            <div class="settings-grid">
+                <div class="settings-card">
+                    <h3>Mipangilio ya Jumla</h3>
+                    <form onsubmit="updateSuperSettings(event)">
+                        <div class="form-group">
+                            <label>Jina la Tovuti</label>
+                            <input type="text" id="siteName" class="form-control" value="CashCola">
+                        </div>
+                        <div class="form-group">
+                            <label>Asilimia ya Bonasi ya Rufaa (%)</label>
+                            <input type="number" id="referralBonus" class="form-control" value="10">
+                        </div>
+                        <button type="submit" class="btn-primary">Hifadhi</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- ADD USER MODAL -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeAddUserModal()">&times;</span>
+        <h3>Ongeza Mtumiaji Mpya</h3>
+        <form onsubmit="addNewUser(event)">
+            <div class="form-group">
+                <label>Jina la Mtumiaji</label>
+                <input type="text" id="newUsername" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Jina Kamili</label>
+                <input type="text" id="newFullname" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Barua Pepe</label>
+                <input type="email" id="newEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nenosiri</label>
+                <input type="password" id="newPassword" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary">Ongeza Mtumiaji</button>
+        </form>
+    </div>
+</div>
+
+<!-- ADD ADMIN MODAL -->
+<div id="addAdminModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeAddAdminModal()">&times;</span>
+        <h3>Ongeza Msimamizi Mpya</h3>
+        <form onsubmit="addNewAdmin(event)">
+            <div class="form-group">
+                <label>Jina Kamili</label>
+                <input type="text" id="newAdminName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Barua Pepe</label>
+                <input type="email" id="newAdminEmail" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nenosiri</label>
+                <input type="password" id="newAdminPassword" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary">Ongeza Msimamizi</button>
+        </form>
+    </div>
+</div>
+
+<!-- ADD DRINK MODAL -->
+<div id="addDrinkModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close-modal" onclick="closeAddDrinkModal()">&times;</span>
+        <h3 id="drinkModalTitle">Ongeza Kinywaji Kipya</h3>
+        <form onsubmit="saveDrink(event)" id="drinkForm">
+            <input type="hidden" id="editDrinkId">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Jina la Kinywaji</label>
+                    <input type="text" id="drinkName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Picha (URL)</label>
+                    <input type="url" id="drinkImage" class="form-control">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Bei (TZS)</label>
+                    <input type="number" id="drinkPrice" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Muda (Siku)</label>
+                    <input type="number" id="drinkDuration" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Asilimia ya Mapato ya Kila Siku (%)</label>
+                <input type="number" id="drinkDailyReturnPercent" class="form-control" step="0.01" oninput="calculateDailyReturn()">
+            </div>
+            <div class="form-group">
+                <label>Mapato ya Kila Siku (TZS) - Itahesabiwa Kiotomatiki</label>
+                <input type="number" id="drinkDailyReturn" class="form-control" readonly>
+            </div>
+            <div class="form-group">
+                <label>Maelezo</label>
+                <textarea id="drinkDescription" class="form-control" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">Hifadhi Kinywaji</button>
+        </form>
+    </div>
+</div>
+
+<!-- ADD SLIDE MODAL -->
+<div id="addSlideModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close-modal" onclick="closeAddSlideModal()">&times;</span>
+        <h3 id="slideModalTitle">Ongeza Slide Mpya</h3>
+        <form onsubmit="saveSlide(event)" id="slideForm">
+            <input type="hidden" id="editSlideId">
+            <div class="form-group">
+                <label>Aina ya Media</label>
+                <select id="slideType" class="form-control" onchange="toggleSlideMediaInput()">
+                    <option value="text">Maandishi Tu</option>
+                    <option value="image">Picha</option>
+                    <option value="video">Video</option>
+                </select>
+            </div>
+            <div class="form-group" id="slideMediaGroup" style="display:none;">
+                <label>Kiungo cha Media (URL)</label>
+                <input type="url" id="slideMediaUrl" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Kichwa cha Habari</label>
+                <input type="text" id="slideTitle" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Maelezo</label>
+                <textarea id="slideDescription" class="form-control" rows="3"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Mpangilio (Namba)</label>
+                <input type="number" id="slideOrder" class="form-control" value="1">
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="slideActive" checked> Slide Ipo Hai
+                </label>
+            </div>
+            <button type="submit" class="btn-primary">Hifadhi Slide</button>
+        </form>
+    </div>
+</div>
+
+<!-- ADD BANK ACCOUNT MODAL (Admin) -->
+<div id="addBankAccountModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeAddBankAccountModal()">&times;</span>
+        <h3>Ongeza Akaunti ya Benki</h3>
+        <form onsubmit="addAdminBankAccount(event)">
+            <div class="form-group">
+                <label>Jina la Benki</label>
+                <input type="text" id="adminBankName" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Namba ya Akaunti</label>
+                <input type="text" id="adminBankAccountNumber" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Jina la Mwenye Akaunti</label>
+                <input type="text" id="adminBankAccountHolder" class="form-control" required>
+            </div>
+            <button type="submit" class="btn-primary">Ongeza Akaunti</button>
+        </form>
+    </div>
+</div>
+
+<!-- USER DETAIL MODAL -->
+<div id="userDetailModal" class="modal">
+    <div class="modal-content modal-lg">
+        <span class="close-modal" onclick="closeUserDetailModal()">&times;</span>
+        <div id="userDetailContent">
+            <!-- User details will be populated -->
+        </div>
+    </div>
+</div>
+
+    <!-- Transaction Detail Modal -->
+    <div id="transactionDetailModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('transactionDetailModal')">&times;</span>
+            <div id="transactionDetailContent">
+                <!-- Transaction details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notificationToast" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeProductModal()">&times;</span>
+            <div class="product-detail" id="productDetail">
+                <!-- Product details will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Details Modal -->
+    <div id="bankModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeBankModal()">&times;</span>
+            <div class="bank-details" id="bankDetails">
+                <!-- Bank details for deposit -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Confirmation Modal -->
+    <div id="transactionModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTransactionModal()">&times;</span>
+            <div class="transaction-confirm">
+                <h3>Thibitisha Muamala</h3>
+                <form id="transactionConfirmForm" onsubmit="confirmTransaction(event)">
+                    <div class="form-group">
+                        <label>Kitambulisho cha Muamala</label>
+                        <input type="text" id="transactionId" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn-primary">Thibitisha</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="notificationToast" class="toast-notification">
+        <div class="toast-content">
+            <i class="fas fa-check-circle toast-icon"></i>
+            <span id="toastMessage"></span>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
+    <script src="main.js"></script>
+</body>
+</html>
